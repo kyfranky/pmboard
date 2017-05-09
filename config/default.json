@@ -31,5 +31,5 @@
       "passwordField": "password"
     }
   },
-  "postgres": "postgres://qxjdrdcgkqdpta:6837f4a6de8ee37483c74c52cce0cbb4df746173a71cbc6ead52e752c9768e53@ec2-50-19-83-146.compute-1.amazonaws.com:5432/d2miu2ts622nga"
+  "postgres": "postgres://vcelxlmcffrnsy:b41ebe39eefaa804728a21e7b4853b6710edd5802399d29d9a622a35d50e5b55@ec2-54-204-0-88.compute-1.amazonaws.com:5432/d51dahbr9mlo0l"
 }
