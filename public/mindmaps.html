@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mind Map Prototype</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="stylesheets/bootstrap-datetimepicker.min.css"/>
+
+  <link rel="stylesheet" href="stylesheets/chat.css">
+
+  <link rel="stylesheet" href="stylesheets/mindmap-menu.css">
+
+</head>
+
+<body onload="init()">
+
+<div class="text-center">
+
+  <div id="floater">
+    <button id="button-slide-left" class="glyphicon glyphicon-chevron-right btn btn-default pull-left"
+            aria-hidden="true"></button>
+  </div>
+  <div id="floater-right">
+    <button id="button-slide-right" class="glyphicon glyphicon-chevron-left btn btn-default pull-right"
+            aria-hidden="true"></button>
+  </div>
+
+</div>
+
+
+<div id="wrapper" class="wrapper">
+
+  <main class="content">
+    <div id="sample">
+      <div id="myDiagramDiv" style="border: solid 1px black; width:95%; height:90vh; margin: 10px auto"></div>
+
+      <button id="SaveButton" onclick="save()">Save</button>
+      <button onclick="load()">Load</button>
+      <button onclick="layoutAll()">Layout</button>
+
+      <textarea id="mySavedModel">
+{ "class": "go.TreeModel",
+  "nodeDataArray": [
+{"key":0, "text":"Mind Map", "loc":"0 0", "movable":"false", "font":"Italic small-caps bold 48px Georgia, Serif"},
+{"key":1, "parent":0, "text":"Getting more time", "brush":"skyblue", "dir":"right", "loc":"263.04785156249994 -16.01406249999999"},
+{"key":11, "parent":1, "text":"Wake up early", "brush":"skyblue", "dir":"right", "loc":"397.0478515625002 -57.01406250000001"},
+{"key":12, "parent":1, "text":"Delegate", "brush":"skyblue", "dir":"right", "loc":"397.0478515625002 -16.014062499999994"},
+{"key":13, "parent":1, "text":"Simplify", "brush":"skyblue", "dir":"right", "loc":"397.0478515625002 24.985937499999995"},
+{"key":2, "parent":0, "text":"More effective use", "brush":"darkseagreen", "dir":"right", "loc":"263.04785156249994 86.4859375"},
+{"key":21, "parent":2, "text":"Planning", "brush":"darkseagreen", "dir":"right", "loc":"400.81298828125006 65.9859375"},
+{"key":211, "parent":21, "text":"Priorities", "brush":"darkseagreen", "dir":"right", "loc":"480.81298828124983 45.48593750000001"},
+{"key":212, "parent":21, "text":"Ways to focus", "brush":"darkseagreen", "dir":"right", "loc":"480.81298828124983 86.4859375"},
+{"key":22, "parent":2, "text":"Goals", "brush":"darkseagreen", "dir":"right", "loc":"400.81298828125006 106.9859375"},
+{"key":3, "parent":0, "text":"Time wasting", "brush":"palevioletred", "dir":"left", "loc":"-30.000000000000014 -31.389062500000012"},
+{"key":31, "parent":3, "text":"Too many meetings", "brush":"palevioletred", "dir":"left", "loc":"-136.517578125 -82.6390625"},
+{"key":32, "parent":3, "text":"Too much time spent on details", "brush":"palevioletred", "dir":"left", "loc":"-136.51757812499994 -21.1390625"},
+{"key":33, "parent":3, "text":"Message fatigue", "brush":"palevioletred", "dir":"left", "loc":"-136.51757812499997 19.8609375"},
+{"key":331, "parent":31, "text":"Check messages less", "brush":"palevioletred", "dir":"left", "loc":"-280.07666015624983 -103.1390625"},
+{"key":332, "parent":31, "text":"Message filters", "brush":"palevioletred", "dir":"left", "loc":"-280.07666015625006 -62.139062499999994"},
+{"key":4, "parent":0, "text":"Key issues", "brush":"coral", "dir":"left", "loc":"-29.999999999999986 101.86093749999998"},
+{"key":41, "parent":4, "text":"Methods", "brush":"coral", "dir":"left", "loc":"-125.00000000000009 60.860937500000006"},
+{"key":42, "parent":4, "text":"Deadlines", "brush":"coral", "dir":"left", "loc":"-124.99999999999997 101.86093749999998"},
+{"key":43, "parent":4, "text":"Checkpoints", "brush":"coral", "dir":"left", "loc":"-124.99999999999994 142.86093749999998"}
+ ]}
+  </textarea>
+
+    </div>
+
+  </main><!-- /content -->
+
+</div><!-- /wrapper -->
+
+<nav id="menu-slide-lefts" class="menu menu-slide-lefts">
+
+  <div style="width: 95%; margin:auto; padding:0;">
+    <button class="menu-close">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true">
+            </span>
+    </button>
+  </div>
+
+  <!-- <div class="menu-footer">
+      Menu footer
+  </div> -->
+
+</nav><!-- /menu push-right -->
+
+<nav id="menu-slide-left" class="menu menu-slide-left" style="width: 20%">
+
+  <div class="menu-wrapper ">
+
+    <div style="width: 90%; margin: auto; display: none;">
+      <button class="menu-close">
+            <span class="glyphicon glyphicon-remove-circle pull-right" aria-hidden="true">
+            </span>
+      </button>
+    </div>
+
+    <div class="title" style="width:95%;height:7.5vh;margin:auto;text-align: center;">
+      <hr style="width: 50%;margin: 7px auto 3px;">
+      <h3 style="margin: 5px auto;color: white;"> Task List </h3>
+      <hr style="width: 50%;margin: 3px auto;">
+    </div>
+
+    <div>
+
+      <ul data-bind="foreach: datas">
+        <li style="list-style: none">
+          <div style="display: flex">
+
+            <h5 style="width: 33.33%" data-bind="text: name"></h5>
+            <h5 style="width: 33.33%" data-bind="date: actualStart"></h5>
+            <h5 style="width: 33.33%" data-bind="date: actualEnd"></h5>
+
+          </div>
+        </li>
+      </ul>
+
+
+    </div>
+
+  </div>
+
+</nav>
+
+<nav id="menu-slide-rights" class="menu menu-slide-rights">
+
+  <div style="width: 95%; margin:auto; padding:0;">
+    <button class="menu-close">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true">
+            </span>
+    </button>
+  </div>
+
+
+  <!-- <div class="menu-footer">
+      Menu footer
+  </div> -->
+
+
+</nav><!-- /menu push-right -->
+
+<nav id="menu-slide-right" class="menu menu-slide-right">
+
+  <div class="menu-wrapper">
+
+    <div style="width:90%;margin: auto; display: none;">
+      <button class="menu-close">
+            <span class="glyphicon glyphicon-remove-circle pull-left" aria-hidden="true">
+            </span>
+      </button>
+    </div>
+
+    <div class="title" style="width:95%;height:5vh;margin:auto;text-align: center;">
+      <hr style="width: 50%;margin: 7px auto 3px;">
+      <h3 style="margin: 5px auto;color: white;"> Properties </h3>
+      <hr style="width: 50%;margin: 3px auto 7px;">
+    </div>
+
+    <div data-bind="template: { name: 'itemsTmpl', foreach: firstMatch}"></div>
+
+    <div class="form-group" style="width: 80%; margin: auto;" data-bind="visible: true">
+      <input type="text" class="form-control" id="key" data-bind="value: mmid" disabled>
+      <input type="text" class="form-control" id="parentkey" data-bind="value: mmparentid" disabled>
+      <input type="text" class="form-control" id="txt" data-bind="value: mmname" disabled>
+    </div>
+
+    <div class="menu-layer" data-bind="visible: mmid().length == 0" style="width: 100%">
+      <h2>Click Mind Map</h2>
+    </div>
+
+    <div class="menu-layer" data-bind="visible: mmid().length !== 0 && firstMatch() === null && checkParent()"
+         style="color: black">
+      <h3 style="color: white">Add to Gantt Charts
+        ?</h3>
+      <button data-bind="click:addItem" style="color: black">
+        Add data
+      </button>
+    </div>
+
+    <div class="menu-layer" data-bind="visible: mmid().length !== 0 && firstMatch() === null && !checkParent()"
+         style="color: black">
+      <h3 style="color: white; text-align: center">Add The Root Parent to Gantt Chart First ! </h3>
+    </div>
+
+    <!-- <div class="menu-footer">
+        Menu footer
+    </div> -->
+
+  </div>
+
+</nav><!-- /menu push-right -->
+
+<script id="itemsTmpl" type="text/html">
+
+  <div class="form-group" style="width: 90%; margin:10px auto;">
+    <label for="types">Type :</label>
+    <input type="text" class="form-control" id="types" data-bind=" value: parent">
+  </div>
+
+  <div class="form-group" style="width: 90%; margin:10px auto;">
+    <label for="sdate">Start Date :</label>
+    <input class="form-control" type="date" id="sdate" data-bind="date: actualStart, dateFormat: 'YYYY-MM-DD'  "/>
+  </div>
+
+  <div class="form-group" style="width: 90%; margin:10px auto;">
+    <label for="edate">End Date :</label>
+    <input class="form-control" type="date" id="edate" data-bind="date: actualEnd, dateFormat: 'YYYY-MM-DD' "/>
+  </div>
+
+  <!-- <input style="color: #000" type='date' class="form-control" data-bind="value: actualStart"/> -->
+
+  <div style="border: 1px solid white;">
+
+    <div class="form-group" style="width: 90%; margin:10px auto;">
+      <label>Connector :</label>
+      <span class="fa fa-plus" aria-hidden="true"
+            data-bind="click:  function() { addConnectors($root.relationship(),$root.relationshipType()) }"
+            style="cursor: pointer"></span>
+    </div>
+
+    <div style="border-top: 1px solid white;">
+
+      <div class="form-group" style="width: 75%; margin:10px auto;">
+        <label>connect To :</label>
+        <select class="form-control" data-bind="
+        options: $root.filteredItems,
+        optionsText: 'name',
+        optionsValue: 'id',
+        value: $root.relationship,
+        optionsCaption: 'none' ">
+        </select>
+      </div>
+
+      <div class="form-group" style="width: 75%; margin:10px auto;">
+        <label>connector Type :</label>
+        <select class="form-control" data-bind="
+        options: $root.connecttype,
+        value: $root.relationshipType,
+        optionsCaption: 'none' ">
+        </select>
+      </div>
+
+    </div>
+
+    <div data-bind="foreach:connector" style="text-align: center">
+      <div style="width: 100%">
+        <span data-bind="text:connectTo"></span>
+        <span data-bind="text:connectorType"></span>
+        <span class="fa fa-times" aria-hidden="true" data-bind="click: function() {$parent.connector.remove($data)}"
+              style="cursor: pointer"></span>
+      </div>
+    </div>
+
+  </div>
+
+</script>
+
+<div id="mask" class="mask"></div><!-- /mask -->
+
+<div class="pullbutton asd">
+  <span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span>
+</div>
+<div class="ui">
+  <div class="left-menu">
+    <form action="#" class="search">
+      <input placeholder="search..." type="search" name="" id="">
+      <input type="submit" value="&#xf002;">
+    </form>
+    <menu class="list-friends">
+      <li>
+        <img width="50" height="50" src="//lorempixel.com/50/50/people/1">
+        <div class="info">
+          <div class="user">Name Fam</div>
+          <div class="status on"> online</div>
+        </div>
+      </li>
+      <li>
+        <img width="50" height="50" src="//lorempixel.com/50/50/people/2">
+        <div class="info">
+          <div class="user">Name Fam</div>
+          <div class="status on"> online</div>
+        </div>
+      </li>
+      <li>
+        <img width="50" height="50" src="//lorempixel.com/50/50/people/3">
+        <div class="info">
+          <div class="user">Name Fam</div>
+          <div class="status on"> online</div>
+        </div>
+      </li>
+    </menu>
+  </div>
+  <div class="chat">
+    <ul class="messages"></ul>
+    <div class="write-form">
+      <textarea placeholder="Type your message" name="e" id="texxt" rows="2"></textarea>
+      <span class="send">Send</span>
+    </div>
+  </div>
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.2.1.js"></script>
+
+<script src='//cdnjs.cloudflare.com/ajax/libs/nicescroll/3.5.4/jquery.nicescroll.js'></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.1.4/core.min.js"></script>
+<script src="//npmcdn.com/feathers-client@^2.0.0-pre.2/dist/feathers.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="scripts/auth-mindmap.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.7.4/go-debug.js"></script>
+
+<script type='text/javascript' src='https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.2.debug.js'></script>
+<script src="scripts/knockout.mapping-latest.debug.js"></script>
+<script src="scripts/knockout-date-bindings.js"></script>
+
+<script src="scripts/chat.js"></script>
+<script src="scripts/mindmap.js"></script>
+<script src="scripts/mindmap-menu.js"></script>
+
+<script>
+
+
+  function Connectors(data) {
+
+    let self = this;
+
+    self.connectTo = ko.observable(data.connectTo);
+    self.connectorType = ko.observable(data.connectorType);
+  }
+
+  function Mapped(data) {
+
+
+    console.log(data)
+
+  }
+
+  function Gantt(data) {
+
+    let self = this;
+
+    self.id = ko.observable(data.id);
+    self.name = ko.observable(data.name);
+
+    this.parent = ko.observable(data.parent);
+
+    self.actualStart = ko.observable(data.actualStart);
+    self.actualEnd = ko.observable(data.actualEnd);
+
+    self.periods = ko.computed(function () {
+
+      let start, end;
+
+      start = moment(self.actualStart(), 'YYYY-MM-DD');
+      end = moment(self.actualEnd(), 'YYYY-MM-DD');
+
+      let durations = end.diff(start, 'days');
+
+      return durations;
+
+    });
+
+    self.progressValue = ko.observable(data.progressValue);
+
+    self.connector = ko.observableArray([]);
+
+    self.addConnectors = function (relationship, relationshipType) {
+
+      if (relationship === undefined || relationshipType === undefined) return;
+
+      self.connector.push(new Connectors({connectTo: relationship, connectorType: relationshipType}))
+    };
+
+    //console.log(data.connector);
+
+    if (data.connector != null || data.connector != undefined) {
+      let string = data.connector;
+      if (string.length === 0)return;
+      string.forEach(function (data) {
+        self.connector.push(new Connectors({connectTo: data.connectTo, connectorType: data.connectorType}))
+      });
+    }
+
+  }
+
+  function viewModel() {
+
+    var self = this;
+
+    self.mmid = ko.observable("");
+    self.mmparentid = ko.observable("");
+
+    self.mmname = ko.observable("");
+    self.datas = ko.observableArray([]);
+    self.connecttype = ko.observableArray(["StartStart", "StartFinish", "FinishStart", "FinishFinish"]);
+    self.type = ko.observableArray(["Group", "Task", "Milestone"]);
+
+    self.relationship = ko.observable();
+    self.relationshipType = ko.observable("");
+
+    let today = moment().format("YYYY-MM-DD");
+    let tommorow = moment().add(1, 'days').format("YYYY-MM-DD");
+
+    self.addItem = function () {
+      self.datas.push(
+        new Gantt({
+          id: self.mmid(),
+          parent: self.mmparentid(),
+          name: self.mmname(),
+          actualStart: today,
+          actualEnd: tommorow,
+        }));
+      console.log(ko.toJSON(self.datas()));
+      getShortestDate(self.mmparentid());
+    };
+
+    self.removeItem = function (Gantt) {
+      self.datas.destroy(Gantt)
+    };
+
+    self.firstMatch = ko.dependentObservable(function () {
+      let search = self.mmid();
+      if (!search) {
+        return null;
+      }
+      else {
+        return ko.utils.arrayFirst(self.datas(), function (Gantt) {
+            return Gantt.id() === search
+          }
+        );
+      }
+    }, viewModel);
+    self.filteredItems = ko.computed(function () {
+      var filter = self.mmid();
+      if (!filter) {
+        return self.datas;
+      } else {
+        return ko.utils.arrayFilter(self.datas(), function (item) {
+          return item.id() !== filter;
+        });
+      }
+    });
+
+    self.checkParents = ko.computed(function () {
+
+      var filter = self.mmparentid();
+
+      if (!filter) {
+        return self.datas;
+      } else {
+        return ko.utils.arrayFilter(self.datas(), function (item) {
+          return item.id() === filter;
+        });
+      }
+
+    });
+    self.checkParent = ko.computed(function () {
+
+      if (self.checkParents().length == 0) {
+
+        console.log("false")
+
+        return false;
+      }
+      else {
+        return true;
+      }
+
+    });
+
+    self.save = function () {
+      console.log("kirim");
+
+      app.service('projects').patch(getQueryVariable('id'), {
+        GanttChartData: ko.mapping.toJS(self.datas),
+      })
+        .catch(error => console.log(error));
+    };
+
+    let frst;
+
+    app.authenticate()
+      .then(response => {
+        return app.passport.verifyJWT(response.accessToken);
+      })
+      .then(() => {
+        app.service('projects').get(getQueryVariable("id"))
+          .then(respone => {
+            var mappedTasks = $.map(respone.GanttChartData, function (item) {
+              return new Gantt(item)
+            });
+            self.datas(mappedTasks);
+            frst = respone.GanttChartData;
+          })
+
+      });
+
+    self.checkUpdate = ko.computed(function () {
+      return ko.toJSON(self.datas);
+    }).subscribe(function () {
+
+      if (frst === undefined) return;
+
+      console.log(ko.toJSON(self.datas));
+      console.log(JSON.stringify(frst));
+
+      if (JSON.stringify(frst) === ko.toJSON(self.datas)) {
+        console.log("sama")
+      }
+      else {
+        getShortestDate(self.mmparentid());
+        self.save();
+      }
+
+      console.log("yiha");
+
+    });
+
+    function getSibling(ID) {
+      var filter = ID;
+      if (!filter) {
+        return self.datas;
+      } else {
+        return ko.utils.arrayFilter(self.datas(), function (item) {
+          return item.parent() === filter;
+        });
+      }
+    };
+
+    function getParent(ID) {
+      let search = ID;
+
+      if (!search) {
+        return null;
+      }
+      else {
+        return ko.utils.arrayFirst(self.datas(), function (Gantt) {
+            return Gantt.id() === search
+          }
+        );
+      }
+
+    };
+
+    function getAncestor(ID) {
+
+      let search = ID;
+
+      if (!search) {
+        return null;
+      }
+      else {
+        return ko.utils.arrayFirst(self.datas(), function (Gantt) {
+            return Gantt.id() === search
+          }
+        );
+      }
+
+
+    };
+
+    function getShortestDate(ID) {
+
+      let data = getSibling(ID);
+
+      let lowestStart = null;
+      let highestEnd = null;
+      let parent = null;
+
+      for (let i = 0; i < data.length; i++) {
+        let Start = moment(data[i].actualStart()).format('YYYY-MM-DD');
+        if (lowestStart != null) {
+          if (moment(lowestStart).isAfter(Start)) {
+            lowestStart = Start;
+          }
+        }
+        else {
+          lowestStart = Start;
+        }
+
+        let End = moment(data[i].actualEnd()).format('YYYY-MM-DD');
+        if (highestEnd != null) {
+          if (moment(highestEnd).isBefore(End)) {
+            highestEnd = End;
+          }
+        }
+        else {
+          highestEnd = End;
+        }
+        parent = data[i].parent();
+      }
+
+      getParent(ID).actualStart(lowestStart);
+      getParent(ID).actualEnd(highestEnd);
+
+      if (getAncestor(parent).parent() != null || getAncestor(parent).parent() != undefined) {
+        console.log(lowestStart, highestEnd);
+        getShortestDate(getAncestor(parent).parent());
+      }
+      else {
+        console.log(lowestStart, highestEnd);
+        return
+      }
+
+
+    }
+
+  }
+
+
+  ko.applyBindings(new viewModel());
+
+</script>
+
+</body>
+</html>

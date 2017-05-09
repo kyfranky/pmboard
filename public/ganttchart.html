@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://cdn.anychart.com/css/12.0/anychart-ui.min.css"/>
+
+  <link rel="stylesheet" href="stylesheets/ganttchart.css">
+
+  <link rel="stylesheet" href="stylesheets/chat.css">
+
+  <link rel="stylesheet" href="stylesheets/popup.css">
+
+
+</head>
+
+<body>
+
+<div class="masker">
+
+  <div id="menu-add">
+
+    <div style="width:350px; margin: 0 auto 20px;">
+
+      <h1>Add Data</h1>
+
+      <input type="text" placeholder="Task Name" class="form-control" id="taskName">
+
+      <input type="date" class="form-control" id="startDate">
+
+      <input type="date" class="form-control" id="endDate">
+
+      <button class="btn btn-primary" id="addDat">Add</button>
+
+      <button class="btn btn-primary" onclick="hideMenu()">Cancel</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div style="width:90%; height:80vh;border: 1px solid #dce4ec; margin: 10vh auto">
+  <div id="container"></div>
+</div>
+
+
+<div class="pullbutton asd">
+
+  <span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span>
+
+</div>
+
+
+<div class="ui chat">
+
+  <div class="left-menu">
+    <form action="#" class="search">
+      <input placeholder="search..." type="search" name="" id="">
+      <input type="submit" value="&#xf002;">
+    </form>
+    <menu class="list-friends">
+
+      <li>
+        <img width="50" height="50" src="//lorempixel.com/50/50/people/1">
+        <div class="info">
+          <div class="user">Name Fam</div>
+          <div class="status on"> online</div>
+        </div>
+      </li>
+
+      <li>
+        <img width="50" height="50" src="//lorempixel.com/50/50/people/2">
+        <div class="info">
+          <div class="user">Name Fam</div>
+          <div class="status on"> online</div>
+        </div>
+      </li>
+
+      <li>
+        <img width="50" height="50" src="//lorempixel.com/50/50/people/3">
+        <div class="info">
+          <div class="user">Name Fam</div>
+          <div class="status on"> online</div>
+        </div>
+      </li>
+
+    </menu>
+  </div>
+
+  <div class="chat">
+
+    <ul class="messages">
+
+
+    </ul>
+
+    <div class="write-form">
+      <textarea placeholder="Type your message" name="e" id="texxt" rows="2"></textarea>
+      <span class="send">Send</span>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.js"></script>
+
+<script src="http://cdn.anychart.com/js/12.0/anychart-bundle.dev.min.js"></script>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.1.4/core.min.js"></script>
+<script src="//npmcdn.com/feathers-client@^2.0.0-pre.2/dist/feathers.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="scripts/auth-gantt.js"></script>
+
+<script src='//cdnjs.cloudflare.com/ajax/libs/nicescroll/3.5.4/jquery.nicescroll.js'></script>
+
+<script src="scripts/chat.js"></script>
+
+<script src="scripts/ganttchart.js"></script>
+
+</body>
+</html>
